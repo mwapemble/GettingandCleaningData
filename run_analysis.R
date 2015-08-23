@@ -14,39 +14,26 @@
 ## Initialisation Routines
 if (!require(dplyr)){
   install.package("dplyr")}
-
-##if (!require(reshape2)){
-##  install.package("reshape2")}
-
 require(dplyr)
-## require(reshape2)
 
 ## Initialise variables. These could be parameters in a generic function
-dset.names <- c("test", "train")
 data.directory <- "data"
 tidy.directory <- "tidy"
 zipfile <- "wearables.zip"
 fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip "
 files.used <- c(1, 3, 14, 15, 16, 26, 27, 28)
 
-## Initialise input data frame
-## df.input <- NULL
-
 ## Check to see if there is a data directory
 ## If not, create it.
-
 if (!file.exists(data.directory)) {
   dir.create(data.directory)
 }
 
 ## Fetch file if not already downloaded
-
 tempname <- paste(".", data.directory, zipfile, sep="/")
 if (!file.exists(tempname)) 
   {
-  
   ## Running on Mac / OSX & target is https, therefore "libcurl" method is required.
-  
   download.file(fileUrl, destfile = tempname, method = "libcurl")
   dateDownloaded.zip <- date()
 }
@@ -59,6 +46,7 @@ file.names <- paste(data.directory,list.files(data.directory, recursive=TRUE),se
 ## Discard unused files
 file.names <- file.names[files.used]
 
+## Load files in to tables.
 activities <- read.table(file.names[1], header = FALSE)
 labels <- read.table(file.names[2], header = FALSE)
 
@@ -102,6 +90,7 @@ label.names <- gsub("J", "j", label.names)
 ## Remove superfluous characters 
 label.names <- gsub("-|(\\(\\))","",label.names)
 
+## And now extract the wanted columns
 features <- features[,labels.wanted]
 
 ## Appropriately labels the data set with descriptive variable names. 
@@ -121,7 +110,7 @@ tidy.data[3] <- NULL
   
 ## Uses descriptive activity names to name the activities in the data set
 tidy.data$activity <- activities[tidy.data$activity,2]
-## Export data as tidy/meansbysubjectandactivity.csv
+## Export data as tidy/meansbysubjectandactivity.txt
 ## First make directory
 
 if (!file.exists(tidy.directory)) {
